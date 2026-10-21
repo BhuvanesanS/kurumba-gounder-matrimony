@@ -1,0 +1,10 @@
+<svg width="180" height="180" viewBox="0 0 180 180" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">Kurumba Gounder Legacy mark</title>
+  <desc id="desc">An original green and gold heritage-inspired monogram with a kolam star and leaf.</desc>
+  <circle cx="90" cy="90" r="84" fill="#184D37"/>
+  <circle cx="90" cy="90" r="70" stroke="#F4D74E" stroke-width="3"/>
+  <path d="M90 37C106 51 116 67 116 87C116 111 103 130 90 143C77 130 64 111 64 87C64 67 74 51 90 37Z" fill="#F4D74E"/>
+  <path d="M90 48V130M90 82C79 70 69 67 57 67M90 99C102 85 113 82 125 83" stroke="#184D37" stroke-width="5" stroke-linecap="round"/>
+  <path d="M42 90H58M122 90H138M90 20V35M90 145V160" stroke="#F4D74E" stroke-width="4" stroke-linecap="round"/>
+  <path d="M90 68L95 82L109 87L95 92L90 106L85 92L71 87L85 82L90 68Z" fill="#184D37"/>
+</svg>
