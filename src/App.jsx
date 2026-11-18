@@ -98,21 +98,21 @@ function App() {
   return (
     <main>
       <a className="skip-link" href="#main-content">Skip to content</a>
-      <div className="utility-bar"><p>Kurumba Gounder community matrimony</p><a href="#create-profile">Create a profile</a></div>
+      <div className="utility-bar"><p>குரும்ப கவுண்டர் குடும்பங்களுக்கான திருமண அறிமுகம்</p><a href="#create-profile">பதிவு செய்யுங்கள்</a></div>
       <header className="site-header">
         <a className="brand" href="#top" aria-label="Kudumbam Matrimony home"><BrandMark /></a>
-        <nav aria-label="Primary navigation"><a href="#how-it-works">How it works</a><a href="#profiles">Discover profiles</a><a href="#create-profile">Create profile</a><a href="#questions">Questions</a></nav>
-        <a className="header-action" href="#create-profile">Begin here <span aria-hidden="true">→</span></a>
+        <nav aria-label="Primary navigation"><a href="#how-it-works">எப்படி செயல்படும்</a><a href="#profiles">வரன் / மணமகள்</a><a href="#create-profile">பதிவு செய்யுங்கள்</a><a href="#questions">உதவி</a></nav>
+        <a className="header-action" href="#create-profile">தொடங்குங்கள் <span aria-hidden="true">→</span></a>
       </header>
 
       <div id="main-content">
         <section className="hero" id="top">
           <div className="hero-copy">
-            <p className="kicker">A respectful place to begin</p>
-            <h1>Two hearts. Two families. One meaningful <em>beginning.</em></h1>
-            <p className="hero-intro">Kurumba Gounder Matrimony helps families begin a respectful alliance journey—with protected profiles, compatibility guidance, and consent at every meaningful step.</p>
-            <div className="hero-actions"><a className="button button-primary" href="#create-profile">Create a profile <span aria-hidden="true">→</span></a><a className="text-link" href="#how-it-works">How the process works <span aria-hidden="true">↓</span></a></div>
-            <dl className="hero-notes"><div><dt>Private by design</dt><dd>Mobile numbers do not appear on profile cards.</dd></div><div><dt>Community-led</dt><dd>Built around an introduction, not an open directory.</dd></div></dl>
+            <p className="kicker">நம்பிக்கையான திருமண அறிமுகம்</p>
+            <h1>இரு மனங்கள். இரு குடும்பங்கள். ஒரு இனிய <em>தொடக்கம்.</em></h1>
+            <p className="hero-intro">குரும்ப கவுண்டர் குடும்பங்களுக்கான பாதுகாப்பான திருமண அறிமுகம். மணமகன் அல்லது மணமகள் விவரங்களைப் பாருங்கள்; குடும்ப சம்மதத்துடன் அடுத்த படியை எடுங்கள்.</p>
+            <div className="hero-actions"><a className="button button-primary" href="#create-profile">வரன் / மணமகள் பதிவு <span aria-hidden="true">→</span></a><a className="text-link" href="#how-it-works">எப்படி செயல்படும்? <span aria-hidden="true">↓</span></a></div>
+            <dl className="hero-notes"><div><dt>தனியுரிமை பாதுகாப்பு</dt><dd>மொபைல் எண் profile card-ல் காட்டப்படாது.</dd></div><div><dt>குடும்ப மையம்</dt><dd>குடும்ப அறிமுகத்திற்காக உருவாக்கப்பட்டது.</dd></div></dl>
           </div>
           <figure className="hero-composition">
             <img className="hero-photo" src="/wedding-thali-hero.png" alt="Illustrative Tamil wedding thali ceremony" />
@@ -122,11 +122,11 @@ function App() {
         </section>
 
         <section className="quick-start" aria-labelledby="quick-start-title">
-          <div><p className="kicker">Start with a simple search</p><h2 id="quick-start-title">Find an introduction that feels closer to home.</h2></div>
+          <div><p className="kicker">எளிய தேடல்</p><h2 id="quick-start-title">உங்கள் குடும்பத்துக்கு ஏற்ற வரன் அல்லது மணமகளைத் தேடுங்கள்.</h2></div>
           <form onSubmit={searchProfiles}>
-            <Field label="Looking for"><select name="lookingFor" value={filters.lookingFor} onChange={updateFilter}><option value="Bride">A bride</option><option value="Groom">A groom</option></select></Field>
-            <Field label="Preferred location"><select name="city" value={filters.city} onChange={updateFilter}>{districts.map((district) => <option key={district}>{district}</option>)}</select></Field>
-            <button className="button button-dark" type="submit">Explore profiles <span aria-hidden="true">→</span></button>
+            <Field label="நீங்கள் தேடுவது"><select name="lookingFor" value={filters.lookingFor} onChange={updateFilter}><option value="Bride">மணமகள் (பெண்)</option><option value="Groom">மணமகன் (ஆண்)</option></select></Field>
+            <Field label="விருப்பமான மாவட்டம்"><select name="city" value={filters.city} onChange={updateFilter}>{districts.map((district) => <option key={district}>{district}</option>)}</select></Field>
+            <button className="button button-dark" type="submit">விவரங்களைப் பாருங்கள் <span aria-hidden="true">→</span></button>
           </form>
         </section>
 
@@ -141,16 +141,16 @@ function App() {
         </section>
 
         <section className="profile-browser section" id="profiles" aria-labelledby="profiles-title">
-          <div className="browser-heading"><div><p className="kicker">Community introductions</p><h2 id="profiles-title">Profiles, presented with dignity.</h2></div><p>Only profile details intended for discovery are shown here. Direct contact remains private.</p></div>
+          <div className="browser-heading"><div><p className="kicker">சமூக திருமண அறிமுகங்கள்</p><h2 id="profiles-title">வரன் மற்றும் மணமகள் விவரங்கள்.</h2></div><p>தேடலுக்குத் தேவையான விவரங்கள் மட்டுமே இங்கே இருக்கும். தொடர்பு எண் தனிப்பட்டது.</p></div>
           <form className="filter-bar" onSubmit={searchProfiles}>
-            <Field label="Looking for"><select name="lookingFor" value={filters.lookingFor} onChange={updateFilter}><option value="Bride">Bride</option><option value="Groom">Groom</option></select></Field>
-            <Field label="District"><select name="city" value={filters.city} onChange={updateFilter}>{districts.map((district) => <option key={district}>{district}</option>)}</select></Field>
-            <Field label="Kulam (optional)"><input name="kulam" value={filters.kulam} onChange={updateFilter} placeholder="Enter a Kulam" /></Field>
-            <button className="button button-outline" type="submit">Update results</button>
+            <Field label="தேடுவது"><select name="lookingFor" value={filters.lookingFor} onChange={updateFilter}><option value="Bride">மணமகள் (பெண்)</option><option value="Groom">மணமகன் (ஆண்)</option></select></Field>
+            <Field label="மாவட்டம்"><select name="city" value={filters.city} onChange={updateFilter}>{districts.map((district) => <option key={district}>{district}</option>)}</select></Field>
+            <Field label="குலம் (விருப்பம்)"><input name="kulam" value={filters.kulam} onChange={updateFilter} placeholder="குலம் எழுதுங்கள்" /></Field>
+            <button className="button button-outline" type="submit">தேடலை மாற்றுங்கள்</button>
           </form>
           <div className="profile-grid" aria-live="polite">
-            {isLoading && <p className="empty-state">Loading community introductions…</p>}
-            {!isLoading && displayedProfiles.map((candidate, index) => <article className="profile-card" key={candidate.id}><div className={`profile-avatar avatar-${index % 3}`} aria-hidden="true">{candidate.firstName?.slice(0, 1) || 'K'}</div><div className="profile-card-top"><span>{candidate.verificationStatus === 'verified' ? 'Reviewed profile' : 'New introduction'}</span><small>{candidate.gender}</small></div><h3>{candidate.firstName}, {candidate.age}</h3><p className="profile-role">{candidate.education || candidate.occupation || 'Community member'}</p><dl><div><dt>Location</dt><dd>{candidate.city || 'Tamil Nadu'}</dd></div><div><dt>Kulam</dt><dd>{candidate.kulam || 'Not shared'}</dd></div>{candidate.nakshatram && <div><dt>Star</dt><dd>{candidate.nakshatram}</dd></div>}</dl><button type="button" className="card-action" onClick={() => setNotice(`An introduction request for ${candidate.firstName} can be coordinated after both families consent.`)}>Request an introduction <span aria-hidden="true">→</span></button></article>)}
+            {isLoading && <p className="empty-state">திருமண அறிமுகங்கள் ஏற்றப்படுகின்றன…</p>}
+            {!isLoading && displayedProfiles.map((candidate, index) => <article className="profile-card" key={candidate.id}><div className={`profile-avatar avatar-${index % 3}`} aria-hidden="true">{candidate.firstName?.slice(0, 1) || 'K'}</div><div className="profile-card-top"><span>{candidate.verificationStatus === 'verified' ? 'சரிபார்க்கப்பட்ட விவரம்' : 'புதிய அறிமுகம்'}</span><small>{candidate.gender === 'Bride' ? 'மணமகள் (பெண்)' : 'மணமகன் (ஆண்)'}</small></div><h3>{candidate.firstName}, {candidate.age}</h3><p className="profile-role">{candidate.education || candidate.occupation || 'சமூக உறுப்பினர்'}</p><dl><div><dt>இடம்</dt><dd>{candidate.city || 'தமிழ்நாடு'}</dd></div><div><dt>குலம்</dt><dd>{candidate.kulam || 'பகிரப்படவில்லை'}</dd></div>{candidate.nakshatram && <div><dt>நட்சத்திரம்</dt><dd>{candidate.nakshatram}</dd></div>}</dl><button type="button" className="card-action" onClick={() => setNotice(`${candidate.firstName} அவர்களின் விவரத்திற்கு இரு குடும்ப சம்மதத்துடன் அறிமுக கோரிக்கை செய்யலாம்.`)}>அறிமுகம் கோருங்கள் <span aria-hidden="true">→</span></button></article>)}
             {!isLoading && displayedProfiles.length === 0 && <p className="empty-state">No introductions match these filters yet. Try another district or create a profile to begin.</p>}
           </div>
         </section>
