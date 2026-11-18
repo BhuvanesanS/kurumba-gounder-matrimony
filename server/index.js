@@ -14,6 +14,8 @@ const dataFile = path.join(dataDirectory, 'matrimony.json')
 const app = express()
 const port = Number(process.env.PORT || 8787)
 const allowedOrigin = process.env.APP_ORIGIN || 'http://127.0.0.1:5173'
+const isVercel = Boolean(process.env.VERCEL)
+let runtimeStore
 
 app.use(cors({ origin: allowedOrigin }))
 app.use(express.json({ limit: '500kb' }))
@@ -49,7 +51,8 @@ function createProfileRecord(parsed) {
 }
 
 async function readStore() {
-  await fs.mkdir(dataDirectory, { recursive: true })
+  if (runtimeStore) return runtimeStore
+
   let store
   try {
     store = JSON.parse(await fs.readFile(dataFile, 'utf8'))
@@ -68,12 +71,22 @@ async function readStore() {
       const parsed = parseMatrimonialPost(post)
       store.profiles.push(createProfileRecord(parsed))
     }
-    await fs.writeFile(dataFile, JSON.stringify(store, null, 2))
+    if (!isVercel) {
+      await fs.mkdir(dataDirectory, { recursive: true })
+      await fs.writeFile(dataFile, JSON.stringify(store, null, 2))
+    }
   }
+  runtimeStore = store
   return store
 }
 
 async function writeStore(store) {
+  runtimeStore = store
+  // Vercel's function filesystem is read-only. Keep registrations available
+  // for the active function instance; attach a database before relying on
+  // cross-instance persistence.
+  if (isVercel) return
+  await fs.mkdir(dataDirectory, { recursive: true })
   await fs.writeFile(dataFile, JSON.stringify(store, null, 2))
 }
 
@@ -341,4 +354,8 @@ app.use((error, _request, response, _next) => {
   response.status(500).json({ error: 'The service could not complete this request. Please try again.' })
 })
 
-app.listen(port, () => console.log(`Kurumba Gounder Matrimony API listening on http://127.0.0.1:${port}`))
+if (!isVercel) {
+  app.listen(port, () => console.log(`Kurumba Gounder Matrimony API listening on http://127.0.0.1:${port}`))
+}
+
+export default app
