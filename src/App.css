@@ -158,6 +158,9 @@ footer { display: grid; min-height: 180px; grid-template-columns: 1fr 1fr 1fr; a
 .language-card h2 > span { display: block; }
 .language-title-english { margin-top: .35rem; font-size: .72em; }
 .language-card > p:last-child { margin-top: .85rem; }
+.range-fields { display: grid; grid-template-columns: 1fr 1fr; gap: .5rem; }
+.upload-ready { color: var(--moss) !important; font-weight: 700 !important; }
+.intent-gate { position: fixed; inset: 0; z-index: 95; display: grid; place-items: center; padding: 1rem; background: rgba(8,40,28,.67); backdrop-filter: blur(8px); }.intent-card { width: min(560px, 100%); padding: clamp(1.5rem,5vw,2.75rem); border: 1px solid rgba(188,230,108,.75); border-radius: 22px; background: #fffdf3; box-shadow: 0 30px 90px rgba(0,0,0,.32); text-align: center; }.intent-card h2 { margin: .4rem 0 .85rem; font-family: var(--serif); font-size: clamp(2.2rem,6vw,3.45rem); letter-spacing: -.06em; line-height: .98; }.intent-card > p:not(.kicker) { max-width: 440px; margin: 0 auto; color: var(--muted); }.intent-options { display: grid; grid-template-columns: 1fr 1fr; gap: .85rem; margin-top: 1.8rem; }.intent-options button { display: grid; min-height: 120px; gap: .35rem; place-content: center; border: 1px solid #749080; border-radius: 14px; background: #f1f4e9; color: var(--forest); transition: transform .2s ease, background .2s ease; }.intent-options button:first-child { background: var(--forest); color: white; }.intent-options button:hover, .intent-options button:focus-visible { background: var(--lime); color: var(--forest); transform: translateY(-3px); outline: 3px solid rgba(168,82,63,.35); outline-offset: 2px; }.intent-options strong { font-family: var(--serif); font-size: 1.8rem; }.intent-options small { font-size: .75rem; }.intent-dismiss { margin-top: 1rem; padding: .5rem .7rem; border: 0; background: transparent; color: var(--muted); font-size: .82rem; font-weight: 700; text-decoration: underline; text-underline-offset: 4px; }
 
 @media (max-height: 680px) {
   .language-card { padding-block: .8rem; }
@@ -167,5 +170,7 @@ footer { display: grid; min-height: 180px; grid-template-columns: 1fr 1fr 1fr; a
   .language-options button { min-height: 72px; }
   .language-card > p:last-child { margin: .6rem 0 0; font-size: .72rem; }
 }
+
+@media (max-width: 600px) { .intent-options { grid-template-columns: 1fr; }.intent-options button { min-height: 78px; }.intent-card { max-height: calc(100dvh - 2rem); overflow-y: auto; }.range-fields { grid-template-columns: 1fr; } }
 
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }.hero-composition { transform: none; } }

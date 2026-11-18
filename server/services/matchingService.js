@@ -12,17 +12,54 @@ function incomeToLpa(value) {
   if (!number) return 0
   const text = String(value).toLowerCase()
   if (text.includes('month') || text.includes('pm')) return number * 12 / 100000
-  return number
+  if (text.includes('lakh') || text.includes('lpa')) return number
+  return number > 100 ? number / 100000 : number
+}
+
+function matchesPreference(preference, value) {
+  const expected = String(preference || '').trim().toLowerCase()
+  const actual = String(value || '').trim().toLowerCase()
+  return !expected || actual.includes(expected) || expected.includes(actual)
+}
+
+function meetsStatedRequirements(owner, target) {
+  const targetIncome = incomeToLpa(target.income)
+  const minimumIncome = incomeToLpa(owner.expectedMinIncome)
+  const maximumIncome = incomeToLpa(owner.expectedMaxIncome)
+  const targetAge = Number(target.age)
+  const minimumAge = Number(owner.expectedMinAge)
+  const maximumAge = Number(owner.expectedMaxAge)
+  return (!minimumIncome || targetIncome >= minimumIncome) &&
+    (!maximumIncome || targetIncome <= maximumIncome) &&
+    (!minimumAge || targetAge >= minimumAge) &&
+    (!maximumAge || targetAge <= maximumAge) &&
+    matchesPreference(owner.expectedEducation, target.education) &&
+    matchesPreference(owner.expectedOccupation, target.occupation) &&
+    matchesPreference(owner.expectedRasi, target.rasi) &&
+    matchesPreference(owner.expectedNakshatram, target.nakshatram)
 }
 
 export function calculateMatchScore(candidate, target) {
-  // 1. Mandatory Gender Check
-  if (candidate.gender === target.gender) {
+  // 1. Both profiles must be seeking each other's stated profile type.
+  if (candidate.gender === target.gender || candidate.lookingFor !== target.gender || target.lookingFor !== candidate.gender) {
     return {
       score: 0,
       badge: 'Incompatible',
       kulamStatus: 'N/A',
-      reasons: ['Same gender profile']
+      reasons: ['The stated bride/groom preferences are not mutual.'],
+      eligible: false,
+      horoscopeStatus: 'not-reviewed',
+    }
+  }
+
+  if (!meetsStatedRequirements(candidate, target) || !meetsStatedRequirements(target, candidate)) {
+    return {
+      score: 0,
+      badge: 'Requirements need review',
+      kulamStatus: 'Review required',
+      reasons: ['At least one stated age, education, occupation, income, rasi, or nakshatram preference is not met.'],
+      eligible: false,
+      horoscopeStatus: 'not-reviewed',
     }
   }
 
@@ -143,6 +180,9 @@ export function calculateMatchScore(candidate, target) {
     badge,
     kulamStatus,
     reasons,
+    warnings: kulamStatus.startsWith('Same Kulam') ? ['Send for family and customary review before an introduction.'] : [],
+    eligible: true,
+    horoscopeStatus: candidate.horoscopeUrl || target.horoscopeUrl ? 'document-available-for-private-review' : 'rasi-nakshatram-preferences-aligned',
     targetProfile: target
   }
 }
@@ -151,8 +191,7 @@ export function calculateMatchScore(candidate, target) {
  * Find top matches for a given profile from the database
  */
 export function findMatchesForProfile(profile, allProfiles, limit = 6) {
-  const targetGender = profile.gender === 'Groom' ? 'Bride' : 'Groom'
-  const candidates = allProfiles.filter((p) => p.id !== profile.id && p.gender === targetGender)
+  const candidates = allProfiles.filter((p) => p.id !== profile.id && p.verificationStatus === 'verified')
 
   const ranked = candidates.map((target) => {
     const match = calculateMatchScore(profile, target)
@@ -161,9 +200,12 @@ export function findMatchesForProfile(profile, allProfiles, limit = 6) {
       score: match.score,
       badge: match.badge,
       kulamStatus: match.kulamStatus,
-      reasons: match.reasons
+      reasons: match.reasons,
+      warnings: match.warnings || [],
+      eligible: match.eligible,
+      horoscopeStatus: match.horoscopeStatus,
     }
   })
 
-  return ranked.sort((a, b) => b.score - a.score).slice(0, limit)
+  return ranked.filter((match) => match.eligible).sort((a, b) => b.score - a.score).slice(0, limit)
 }
