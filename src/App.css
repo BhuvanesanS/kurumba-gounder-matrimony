@@ -149,4 +149,23 @@ footer { display: grid; min-height: 180px; grid-template-columns: 1fr 1fr 1fr; a
   .language-switch, .header-action { min-height: 44px; }
 }
 
+/* The language choice must remain complete and usable on short laptop windows and phones. */
+.language-gate { overflow-y: auto; overscroll-behavior: contain; }
+.language-card { max-height: calc(100dvh - 2rem); margin: auto; padding: clamp(1rem, 3vw, 1.65rem); overflow-y: auto; }
+.language-card img { width: min(220px, 72vw); }
+.language-card .kicker { margin-top: .9rem; }
+.language-card h2 { margin: .4rem 0 1rem; font-size: clamp(1.8rem, 4vw, 2.55rem); line-height: 1.02; }
+.language-card h2 > span { display: block; }
+.language-title-english { margin-top: .35rem; font-size: .72em; }
+.language-card > p:last-child { margin-top: .85rem; }
+
+@media (max-height: 680px) {
+  .language-card { padding-block: .8rem; }
+  .language-card img { width: min(184px, 60vw); }
+  .language-card .kicker { margin-top: .55rem; }
+  .language-card h2 { margin-bottom: .65rem; font-size: clamp(1.55rem, 3.5vw, 2.1rem); }
+  .language-options button { min-height: 72px; }
+  .language-card > p:last-child { margin: .6rem 0 0; font-size: .72rem; }
+}
+
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }.hero-composition { transform: none; } }
