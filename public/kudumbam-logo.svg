@@ -1,13 +1,22 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 96" role="img" aria-labelledby="title desc">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 430 104" role="img" aria-labelledby="title desc">
   <title id="title">Kurumba Gounder Matrimony</title>
-  <desc id="desc">A light yellow and green family matrimony logo</desc>
+  <desc id="desc">A cultural Tamil wedding logo with a bride and groom exchanging garlands</desc>
   <defs>
-    <linearGradient id="leaf" x1="0" x2="1"><stop stop-color="#B8E56B"/><stop offset="1" stop-color="#E8F6A5"/></linearGradient>
+    <linearGradient id="gold" x1="0" x2="1"><stop stop-color="#F5DA52"/><stop offset="1" stop-color="#E6B93D"/></linearGradient>
   </defs>
-  <rect width="320" height="96" rx="24" fill="#143D2A"/>
-  <circle cx="48" cy="48" r="30" fill="#F3E46E"/>
-  <path d="M48 28c-12 8-16 22-14 34 12-2 26-7 32-19 4-8 2-15-2-20-6 1-11 3-16 5Z" fill="url(#leaf)"/>
-  <path d="M47 35c-1 14-5 24-12 31M48 46c7 1 13 4 18 9" fill="none" stroke="#143D2A" stroke-linecap="round" stroke-width="3"/>
-  <text x="92" y="39" fill="#FFFBEA" font-family="Arial, sans-serif" font-size="18" font-weight="700" letter-spacing="-.45">Kurumba Gounder</text>
-  <text x="93" y="64" fill="#D8EE9B" font-family="Arial, sans-serif" font-size="12" font-weight="700" letter-spacing="2.4">MATRIMONY</text>
+  <g transform="translate(8 8)">
+    <circle cx="44" cy="44" r="42" fill="#143D2A"/>
+    <path d="M19 49c3-18 14-29 25-29 11 0 22 11 25 29" fill="none" stroke="url(#gold)" stroke-linecap="round" stroke-width="5"/>
+    <circle cx="31" cy="37" r="7" fill="#F7E47C"/>
+    <path d="M20 61c2-11 8-17 14-17 7 0 12 6 14 17" fill="#F7E47C"/>
+    <circle cx="57" cy="37" r="7" fill="#F7E47C"/>
+    <path d="M47 61c2-11 8-17 14-17 7 0 12 6 14 17" fill="#F7E47C"/>
+    <path d="M25 45c4 6 10 9 19 9s15-3 19-9" fill="none" stroke="#CBEA79" stroke-linecap="round" stroke-width="3"/>
+    <circle cx="27" cy="50" r="2.4" fill="#CBEA79"/><circle cx="34" cy="54" r="2.4" fill="#CBEA79"/><circle cx="44" cy="56" r="2.4" fill="#CBEA79"/><circle cx="54" cy="54" r="2.4" fill="#CBEA79"/><circle cx="61" cy="50" r="2.4" fill="#CBEA79"/>
+    <path d="M44 58v13" stroke="url(#gold)" stroke-linecap="round" stroke-width="3"/>
+    <circle cx="44" cy="73" r="4" fill="url(#gold)"/>
+  </g>
+  <text x="104" y="45" fill="#143D2A" font-family="Georgia, serif" font-size="27" font-weight="700" letter-spacing="-.8">Kurumba Gounder</text>
+  <text x="106" y="70" fill="#5E7A55" font-family="Arial, sans-serif" font-size="12" font-weight="700" letter-spacing="3.1">MATRIMONY</text>
+  <path d="M106 82h230" stroke="#E6B93D" stroke-linecap="round" stroke-width="2"/>
 </svg>
