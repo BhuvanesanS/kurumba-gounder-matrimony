@@ -29,12 +29,25 @@ function Field({ label, children, hint }) {
 }
 
 function App() {
+  const [language, setLanguage] = useState(() => localStorage.getItem('kgm-language'))
   const [filters, setFilters] = useState({ lookingFor: 'Bride', city: 'All Tamil Nadu', kulam: '' })
   const [profiles, setProfiles] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   const [profile, setProfile] = useState(initialProfile)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [notice, setNotice] = useState('')
+
+  const isTamil = language !== 'en'
+  const text = (tamil, english) => isTamil ? tamil : english
+  const chooseLanguage = (nextLanguage) => {
+    localStorage.setItem('kgm-language', nextLanguage)
+    document.documentElement.lang = nextLanguage === 'ta' ? 'ta' : 'en'
+    setLanguage(nextLanguage)
+  }
+  const openLanguageChoice = () => {
+    localStorage.removeItem('kgm-language')
+    setLanguage(null)
+  }
 
   const loadProfiles = async (nextFilters = filters) => {
     setIsLoading(true)
@@ -98,21 +111,21 @@ function App() {
   return (
     <main>
       <a className="skip-link" href="#main-content">Skip to content</a>
-      <div className="utility-bar"><p>குரும்ப கவுண்டர் குடும்பங்களுக்கான திருமண அறிமுகம்</p><a href="#create-profile">பதிவு செய்யுங்கள்</a></div>
+      <div className="utility-bar"><p>{text('குரும்ப கவுண்டர் குடும்பங்களுக்கான திருமண அறிமுகம்', 'Kurumba Gounder family matrimony')}</p><button className="language-switch" type="button" onClick={openLanguageChoice}>{isTamil ? 'தமிழ் / English' : 'English / தமிழ்'}</button><a href="#create-profile">{text('பதிவு செய்யுங்கள்', 'Create profile')}</a></div>
       <header className="site-header">
         <a className="brand" href="#top" aria-label="Kudumbam Matrimony home"><BrandMark /></a>
-        <nav aria-label="Primary navigation"><a href="#how-it-works">எப்படி செயல்படும்</a><a href="#profiles">வரன் / மணமகள்</a><a href="#create-profile">பதிவு செய்யுங்கள்</a><a href="#questions">உதவி</a></nav>
-        <a className="header-action" href="#create-profile">தொடங்குங்கள் <span aria-hidden="true">→</span></a>
+        <nav aria-label="Primary navigation"><a href="#how-it-works">{text('எப்படி செயல்படும்', 'How it works')}</a><a href="#profiles">{text('வரன் / மணமகள்', 'Profiles')}</a><a href="#create-profile">{text('பதிவு செய்யுங்கள்', 'Create profile')}</a><a href="#questions">{text('உதவி', 'Help')}</a></nav>
+        <a className="header-action" href="#create-profile">{text('தொடங்குங்கள்', 'Begin here')} <span aria-hidden="true">→</span></a>
       </header>
 
       <div id="main-content">
         <section className="hero" id="top">
           <div className="hero-copy">
-            <p className="kicker">நம்பிக்கையான திருமண அறிமுகம்</p>
-            <h1>இரு மனங்கள். இரு குடும்பங்கள். ஒரு இனிய <em>தொடக்கம்.</em></h1>
-            <p className="hero-intro">குரும்ப கவுண்டர் குடும்பங்களுக்கான பாதுகாப்பான திருமண அறிமுகம். மணமகன் அல்லது மணமகள் விவரங்களைப் பாருங்கள்; குடும்ப சம்மதத்துடன் அடுத்த படியை எடுங்கள்.</p>
-            <div className="hero-actions"><a className="button button-primary" href="#create-profile">வரன் / மணமகள் பதிவு <span aria-hidden="true">→</span></a><a className="text-link" href="#how-it-works">எப்படி செயல்படும்? <span aria-hidden="true">↓</span></a></div>
-            <dl className="hero-notes"><div><dt>தனியுரிமை பாதுகாப்பு</dt><dd>மொபைல் எண் profile card-ல் காட்டப்படாது.</dd></div><div><dt>குடும்ப மையம்</dt><dd>குடும்ப அறிமுகத்திற்காக உருவாக்கப்பட்டது.</dd></div></dl>
+            <p className="kicker">{text('நம்பிக்கையான திருமண அறிமுகம்', 'A respectful matrimony introduction')}</p>
+            <h1>{text('இரு மனங்கள். இரு குடும்பங்கள். ஒரு இனிய ', 'Two hearts. Two families. One meaningful ')}<em>{text('தொடக்கம்.', 'beginning.')}</em></h1>
+            <p className="hero-intro">{text('குரும்ப கவுண்டர் குடும்பங்களுக்கான பாதுகாப்பான திருமண அறிமுகம். மணமகன் அல்லது மணமகள் விவரங்களைப் பாருங்கள்; குடும்ப சம்மதத்துடன் அடுத்த படியை எடுங்கள்.', 'A private matrimonial introduction for Kurumba Gounder families. Explore bride and groom profiles, then take the next step with family consent.')}</p>
+            <div className="hero-actions"><a className="button button-primary" href="#create-profile">{text('வரன் / மணமகள் பதிவு', 'Create bride / groom profile')} <span aria-hidden="true">→</span></a><a className="text-link" href="#how-it-works">{text('எப்படி செயல்படும்?', 'How it works')} <span aria-hidden="true">↓</span></a></div>
+            <dl className="hero-notes"><div><dt>{text('தனியுரிமை பாதுகாப்பு', 'Private by design')}</dt><dd>{text('மொபைல் எண் profile card-ல் காட்டப்படாது.', 'Mobile numbers do not appear on profile cards.')}</dd></div><div><dt>{text('குடும்ப மையம்', 'Family-first')}</dt><dd>{text('குடும்ப அறிமுகத்திற்காக உருவாக்கப்பட்டது.', 'Built around considered family introductions.')}</dd></div></dl>
           </div>
           <figure className="hero-composition">
             <img className="hero-photo" src="/wedding-thali-hero.png" alt="Illustrative Tamil wedding thali ceremony" />
@@ -122,11 +135,11 @@ function App() {
         </section>
 
         <section className="quick-start" aria-labelledby="quick-start-title">
-          <div><p className="kicker">எளிய தேடல்</p><h2 id="quick-start-title">உங்கள் குடும்பத்துக்கு ஏற்ற வரன் அல்லது மணமகளைத் தேடுங்கள்.</h2></div>
+          <div><p className="kicker">{text('எளிய தேடல்', 'Start with a simple search')}</p><h2 id="quick-start-title">{text('உங்கள் குடும்பத்துக்கு ஏற்ற வரன் அல்லது மணமகளைத் தேடுங்கள்.', 'Find an introduction that feels closer to home.')}</h2></div>
           <form onSubmit={searchProfiles}>
-            <Field label="நீங்கள் தேடுவது"><select name="lookingFor" value={filters.lookingFor} onChange={updateFilter}><option value="Bride">மணமகள் (பெண்)</option><option value="Groom">மணமகன் (ஆண்)</option></select></Field>
-            <Field label="விருப்பமான மாவட்டம்"><select name="city" value={filters.city} onChange={updateFilter}>{districts.map((district) => <option key={district}>{district}</option>)}</select></Field>
-            <button className="button button-dark" type="submit">விவரங்களைப் பாருங்கள் <span aria-hidden="true">→</span></button>
+            <Field label={text('நீங்கள் தேடுவது', 'Looking for')}><select name="lookingFor" value={filters.lookingFor} onChange={updateFilter}><option value="Bride">{text('மணமகள் (பெண்)', 'Bride')}</option><option value="Groom">{text('மணமகன் (ஆண்)', 'Groom')}</option></select></Field>
+            <Field label={text('விருப்பமான மாவட்டம்', 'Preferred district')}><select name="city" value={filters.city} onChange={updateFilter}>{districts.map((district) => <option key={district}>{district}</option>)}</select></Field>
+            <button className="button button-dark" type="submit">{text('விவரங்களைப் பாருங்கள்', 'Explore profiles')} <span aria-hidden="true">→</span></button>
           </form>
         </section>
 
@@ -174,6 +187,7 @@ function App() {
       </div>
 
       <footer><a className="brand" href="#top"><BrandMark /></a><p>Thoughtful introductions for the community.</p><div><a href="#how-it-works">How it works</a><a href="#create-profile">Create profile</a><a href="#questions">Privacy & questions</a></div></footer>
+      {!language && <section className="language-gate" role="dialog" aria-modal="true" aria-labelledby="language-title"><div className="language-card"><img src="/kudumbam-logo.svg" alt="Kurumba Gounder Matrimony" /><p className="kicker">WELCOME · வணக்கம்</p><h2 id="language-title"><span lang="ta">உங்கள் மொழியைத் தேர்ந்தெடுக்கவும்.</span><br />Choose your preferred language.</h2><div className="language-options"><button type="button" onClick={() => chooseLanguage('ta')} lang="ta"><strong>தமிழ்</strong><small>Tamil</small></button><button type="button" onClick={() => chooseLanguage('en')}><strong>English</strong><small lang="ta">ஆங்கிலம்</small></button></div><p>மொழியை எப்போது வேண்டுமானாலும் மாற்றலாம்.<br />You can change it at any time.</p></div></section>}
       {notice && <div className="notice" role="status"><span>{notice}</span><button type="button" onClick={() => setNotice('')} aria-label="Dismiss message">×</button></div>}
     </main>
   )
