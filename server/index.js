@@ -15,6 +15,7 @@ const app = express()
 const port = Number(process.env.PORT || 8787)
 const allowedOrigin = process.env.APP_ORIGIN || 'http://127.0.0.1:5173'
 const isVercel = Boolean(process.env.VERCEL)
+const adminIngestToken = process.env.ADMIN_INGEST_TOKEN
 let runtimeStore
 
 app.use(cors({ origin: allowedOrigin }))
@@ -61,7 +62,8 @@ async function readStore() {
     store = { profiles: [], interests: [], orders: [] }
   }
 
-  // Seed with real channel profiles if empty
+  // Seed local development with sample records only. Production should use a
+  // persistent, reviewed data source rather than automatic public imports.
   if (!store.profiles || store.profiles.length === 0) {
     store.profiles = []
     store.interests = store.interests || []
@@ -113,8 +115,22 @@ function publicProfile(profile) {
 }
 
 app.get('/api/health', (_request, response) => {
-  response.json({ ok: true, service: 'kurumba-gounder-matrimony-api' })
+  response.json({
+    ok: true,
+    service: 'kurumba-gounder-matrimony-api',
+    persistence: isVercel ? 'configure-database-for-production' : 'local-file',
+  })
 })
+
+function requireAdminIngest(request, response, next) {
+  if (!adminIngestToken) {
+    return response.status(503).json({ error: 'Admin ingestion is not configured.' })
+  }
+  if (request.get('x-admin-token') !== adminIngestToken) {
+    return response.status(403).json({ error: 'Admin authorization is required.' })
+  }
+  next()
+}
 
 app.get('/api/channel-info', (_request, response) => {
   response.json({
@@ -146,7 +162,7 @@ app.get('/api/profiles', async (request, response, next) => {
 })
 
 // Ingest raw text copied/exported from WhatsApp Channel
-app.post('/api/ingest/whatsapp-text', async (request, response, next) => {
+app.post('/api/ingest/whatsapp-text', requireAdminIngest, async (request, response, next) => {
   try {
     const rawText = String(request.body.rawText || '').trim()
     if (!rawText || rawText.length < 20) {
@@ -179,7 +195,7 @@ app.post('/api/ingest/whatsapp-text', async (request, response, next) => {
 })
 
 // Ingest curated sample channel posts
-app.post('/api/ingest/sample-channel-posts', async (_request, response, next) => {
+app.post('/api/ingest/sample-channel-posts', requireAdminIngest, async (_request, response, next) => {
   try {
     const store = await readStore()
     const rawPosts = splitChannelPosts(SAMPLE_WHATSAPP_CHANNEL_POSTS)
