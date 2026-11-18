@@ -102,9 +102,11 @@ function App() {
             <div className="hero-actions"><a className="button button-primary" href="#create-profile">Create a profile <span aria-hidden="true">→</span></a><a className="text-link" href="#how-it-works">How the process works <span aria-hidden="true">↓</span></a></div>
             <dl className="hero-notes"><div><dt>Private by design</dt><dd>Mobile numbers do not appear on profile cards.</dd></div><div><dt>Community-led</dt><dd>Built around an introduction, not an open directory.</dd></div></dl>
           </div>
-          <div className="hero-composition" aria-label="Decorative heritage pattern">
-            <div className="arch arch-one" /><div className="arch arch-two" /><div className="heritage-card"><p>புதிய தொடக்கம்</p><strong>A considered<br />introduction.</strong><span>Kurumba Gounder Matrimony</span></div><div className="sun" />
-          </div>
+          <figure className="hero-composition">
+            <img className="hero-photo" src="https://images.unsplash.com/photo-1640745691934-1403879c3ae6?auto=format&fit=crop&w=1200&q=88" alt="Illustrative South Indian bridal portrait" />
+            <div className="photo-wash" /><div className="arch arch-one" /><div className="arch arch-two" />
+            <figcaption className="heritage-card"><p>புதிய தொடக்கம்</p><strong>A considered<br />introduction.</strong><span>Illustrative photography · not a member profile</span></figcaption><div className="sun" />
+          </figure>
         </section>
 
         <section className="quick-start" aria-labelledby="quick-start-title">
@@ -119,6 +121,11 @@ function App() {
         <section className="commitments section" id="how-it-works">
           <div className="section-heading"><p className="kicker">A calmer way to search</p><h2>Every step keeps people, families, and consent in view.</h2><p>Good introductions need enough context to be useful and enough privacy to feel safe. This is the balance the experience is built around.</p></div>
           <div className="commitment-grid">{commitments.map(([number, title, copy]) => <article key={number}><span>{number}</span><h3>{title}</h3><p>{copy}</p></article>)}</div>
+        </section>
+
+        <section className="editorial-section section" aria-labelledby="editorial-title">
+          <div className="editorial-photos"><img src="https://images.unsplash.com/photo-1724857457968-351e2e4b252a?auto=format&fit=crop&w=1100&q=88" alt="Illustrative traditional Indian groom portrait" loading="lazy" /><div className="editorial-note"><span>For families</span><strong>Conversations begin with context, not a contact number.</strong></div></div>
+          <div className="editorial-copy"><p className="kicker">A more human beginning</p><h2 id="editorial-title">Serious intentions deserve a more considered space.</h2><p>Profiles give families a clear starting point—location, education, and the details they choose to share—while the next conversation stays intentional.</p><a className="text-link" href="#create-profile">Create a profile for your family <span aria-hidden="true">→</span></a></div>
         </section>
 
         <section className="profile-browser section" id="profiles" aria-labelledby="profiles-title">
