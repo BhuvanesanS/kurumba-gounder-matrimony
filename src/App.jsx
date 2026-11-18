@@ -1,9 +1,9 @@
 import { useEffect, useMemo, useState } from 'react'
-import './App.css'
 
 const initialProfile = {
   firstName: '', age: '', gender: 'Bride', lookingFor: 'Groom', city: '', kulam: '',
-  nakshatram: '', rasi: '', education: '', income: '', occupation: '', phone: '', about: '', consent: false,
+  nakshatram: '', rasi: '', education: '', income: '', occupation: '', phone: '', about: '',
+  familyType: '', expectedEducation: '', expectedMinIncome: '', expectedMaxIncome: '', expectedRasi: '', expectedNakshatram: '', photoDataUrl: '', consent: false,
 }
 
 const districts = ['All Tamil Nadu', 'Chennai', 'Coimbatore', 'Erode', 'Tiruppur', 'Salem', 'Namakkal', 'Karur', 'Tiruchirappalli', 'Madurai', 'Thanjavur', 'Tirunelveli', 'Vellore']
@@ -21,7 +21,7 @@ const profileSteps = [
 ]
 
 function BrandMark() {
-  return <span className="brand-mark" aria-hidden="true"><i /><i /><i /><i /></span>
+  return <img className="brand-logo" src="/kudumbam-logo.svg" alt="குடும்பம் Matrimony" />
 }
 
 function Field({ label, children, hint }) {
@@ -66,6 +66,18 @@ function App() {
     const { name, value, checked, type } = event.target
     setProfile((current) => ({ ...current, [name]: type === 'checkbox' ? checked : value }))
   }
+  const uploadPhoto = (event) => {
+    const [file] = event.target.files || []
+    if (!file) return
+    if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type) || file.size > 1_500_000) {
+      setNotice('Please choose a JPG, PNG, or WebP photo smaller than 1.5 MB.')
+      event.target.value = ''
+      return
+    }
+    const reader = new FileReader()
+    reader.onload = () => setProfile((current) => ({ ...current, photoDataUrl: String(reader.result || '') }))
+    reader.readAsDataURL(file)
+  }
   const submitProfile = async (event) => {
     event.preventDefault()
     setIsSubmitting(true)
@@ -88,7 +100,7 @@ function App() {
       <a className="skip-link" href="#main-content">Skip to content</a>
       <div className="utility-bar"><p>Kurumba Gounder community matrimony</p><a href="#create-profile">Create a profile</a></div>
       <header className="site-header">
-        <a className="brand" href="#top" aria-label="Kurumba Gounder Matrimony home"><BrandMark /><span><strong>Kurumba Gounder</strong><small>Matrimony</small></span></a>
+        <a className="brand" href="#top" aria-label="Kudumbam Matrimony home"><BrandMark /></a>
         <nav aria-label="Primary navigation"><a href="#how-it-works">How it works</a><a href="#profiles">Discover profiles</a><a href="#create-profile">Create profile</a><a href="#questions">Questions</a></nav>
         <a className="header-action" href="#create-profile">Begin here <span aria-hidden="true">→</span></a>
       </header>
@@ -146,15 +158,15 @@ function App() {
         <section className="process-panel section"><div className="process-panel-copy"><p className="kicker">Made for a serious decision</p><h2>Useful details. Clear boundaries. A human next step.</h2><p>Compatibility is personal. The platform gives families a respectful way to start, rather than making promises it cannot keep.</p><a className="button button-light" href="#create-profile">Start your profile <span aria-hidden="true">→</span></a></div><div className="process-list">{profileSteps.map(([key, title, text]) => <div key={key}><span>{key}</span><section><h3>{title}</h3><p>{text}</p></section></div>)}</div></section>
 
         <section className="registration section" id="create-profile" aria-labelledby="registration-title">
-          <div className="registration-intro"><p className="kicker">Create a profile</p><h2 id="registration-title">Begin with the details you are comfortable sharing.</h2><p>Required fields are marked. Your phone number is used for profile review and is never placed on the public profile card.</p><div className="privacy-note"><strong>Privacy note</strong><span>By submitting, you confirm that you have permission to share these details for a matrimonial introduction.</span></div></div>
+          <div className="registration-intro"><p className="kicker">Create a profile</p><h2 id="registration-title">Begin with the details you are comfortable sharing.</h2><p>Required fields are marked. Your phone number and profile photo are reviewed privately before a profile can be visible.</p><div className="privacy-note"><strong>Compatibility assistant</strong><span>Matches consider Kulam, age, location, rasi, nakshatram, education, income and stated expectations. It is a guide—not a promise or a replacement for family judgement.</span></div></div>
           <form className="registration-form" onSubmit={submitProfile}>
-            <div className="form-grid"><Field label="First name *"><input name="firstName" value={profile.firstName} onChange={updateProfile} required autoComplete="given-name" /></Field><Field label="Age *"><input name="age" type="number" min="18" max="99" value={profile.age} onChange={updateProfile} required /></Field><Field label="Profile for *"><select name="gender" value={profile.gender} onChange={updateProfile}><option value="Bride">Bride</option><option value="Groom">Groom</option></select></Field><Field label="Looking for *"><select name="lookingFor" value={profile.lookingFor} onChange={updateProfile}><option value="Groom">Groom</option><option value="Bride">Bride</option></select></Field><Field label="City or district *"><input name="city" value={profile.city} onChange={updateProfile} required autoComplete="address-level2" /></Field><Field label="Mobile number *" hint="For profile review only"><input name="phone" inputMode="numeric" type="tel" value={profile.phone} onChange={updateProfile} required autoComplete="tel" /></Field><Field label="Education"><input name="education" value={profile.education} onChange={updateProfile} /></Field><Field label="Occupation *"><input name="occupation" value={profile.occupation} onChange={updateProfile} required /></Field><Field label="Kulam"><input name="kulam" value={profile.kulam} onChange={updateProfile} /></Field><Field label="Nakshatram"><input name="nakshatram" value={profile.nakshatram} onChange={updateProfile} /></Field></div><Field label="A brief introduction *" hint="Do not include phone numbers, home address, or other contact details."><textarea name="about" rows="4" value={profile.about} onChange={updateProfile} required /></Field><label className="consent"><input name="consent" type="checkbox" checked={profile.consent} onChange={updateProfile} required /><span>I am 18 or older and I consent to this profile being reviewed for matrimonial introductions.</span></label><button className="button button-primary" type="submit" disabled={isSubmitting}>{isSubmitting ? 'Sending profile…' : 'Send for profile review'} <span aria-hidden="true">→</span></button></form>
+            <div className="form-grid"><Field label="First name *"><input name="firstName" value={profile.firstName} onChange={updateProfile} required autoComplete="given-name" /></Field><Field label="Age *"><input name="age" type="number" min="18" max="99" value={profile.age} onChange={updateProfile} required /></Field><Field label="Profile for *"><select name="gender" value={profile.gender} onChange={updateProfile}><option value="Bride">Bride</option><option value="Groom">Groom</option></select></Field><Field label="Looking for *"><select name="lookingFor" value={profile.lookingFor} onChange={updateProfile}><option value="Groom">Groom</option><option value="Bride">Bride</option></select></Field><Field label="City or district *"><input name="city" value={profile.city} onChange={updateProfile} required autoComplete="address-level2" /></Field><Field label="Mobile number *" hint="For profile review only"><input name="phone" inputMode="numeric" type="tel" value={profile.phone} onChange={updateProfile} required autoComplete="tel" /></Field><Field label="Education"><input name="education" value={profile.education} onChange={updateProfile} placeholder="e.g. B.E., B.Sc., MBA" /></Field><Field label="Occupation *"><input name="occupation" value={profile.occupation} onChange={updateProfile} required /></Field><Field label="Annual income"><input name="income" value={profile.income} onChange={updateProfile} placeholder="e.g. 8 LPA" /></Field><Field label="Family type"><select name="familyType" value={profile.familyType} onChange={updateProfile}><option value="">Prefer not to say</option><option>Nuclear family</option><option>Joint family</option></select></Field><Field label="Kulam"><input name="kulam" value={profile.kulam} onChange={updateProfile} /></Field><Field label="Rasi"><input name="rasi" value={profile.rasi} onChange={updateProfile} /></Field><Field label="Nakshatram"><input name="nakshatram" value={profile.nakshatram} onChange={updateProfile} /></Field><Field label="Expected education"><input name="expectedEducation" value={profile.expectedEducation} onChange={updateProfile} placeholder="e.g. Graduate, MBA" /></Field><Field label="Expected minimum income"><input name="expectedMinIncome" value={profile.expectedMinIncome} onChange={updateProfile} placeholder="e.g. 8 LPA" /></Field><Field label="Expected Rasi"><input name="expectedRasi" value={profile.expectedRasi} onChange={updateProfile} /></Field><Field label="Expected Nakshatram"><input name="expectedNakshatram" value={profile.expectedNakshatram} onChange={updateProfile} /></Field><Field label="Profile photo" hint="JPG, PNG, or WebP · Maximum 1.5 MB"><input type="file" accept="image/jpeg,image/png,image/webp" onChange={uploadPhoto} />{profile.photoDataUrl && <img className="photo-preview" src={profile.photoDataUrl} alt="Selected profile preview" />}</Field></div><Field label="A brief introduction *" hint="Do not include phone numbers, home address, or other contact details."><textarea name="about" rows="4" value={profile.about} onChange={updateProfile} required /></Field><label className="consent"><input name="consent" type="checkbox" checked={profile.consent} onChange={updateProfile} required /><span>I am 18 or older and I consent to this profile being reviewed for matrimonial introductions.</span></label><button className="button button-primary" type="submit" disabled={isSubmitting}>{isSubmitting ? 'Sending profile…' : 'Send for profile review'} <span aria-hidden="true">→</span></button></form>
         </section>
 
         <section className="questions section" id="questions"><div className="section-heading"><p className="kicker">Questions, answered simply</p><h2>Before you begin.</h2></div><div className="faq-list"><details><summary>Who can create a profile?</summary><p>Adults can create a profile for themselves or a family member when they have permission to share the information.</p></details><details><summary>Will my contact number be public?</summary><p>No. The public profile endpoint intentionally excludes mobile numbers. An introduction should happen only after consent.</p></details><details><summary>Does a profile guarantee a match?</summary><p>No. Matrimonial decisions are personal. The service helps families begin a thoughtful discovery process; it does not guarantee an outcome.</p></details></div></section>
       </div>
 
-      <footer><a className="brand" href="#top"><BrandMark /><span><strong>Kurumba Gounder</strong><small>Matrimony</small></span></a><p>Thoughtful introductions for the community.</p><div><a href="#how-it-works">How it works</a><a href="#create-profile">Create profile</a><a href="#questions">Privacy & questions</a></div></footer>
+      <footer><a className="brand" href="#top"><BrandMark /></a><p>Thoughtful introductions for the community.</p><div><a href="#how-it-works">How it works</a><a href="#create-profile">Create profile</a><a href="#questions">Privacy & questions</a></div></footer>
       {notice && <div className="notice" role="status"><span>{notice}</span><button type="button" onClick={() => setNotice('')} aria-label="Dismiss message">×</button></div>}
     </main>
   )

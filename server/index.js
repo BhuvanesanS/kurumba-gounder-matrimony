@@ -11,6 +11,7 @@ import { SAMPLE_WHATSAPP_CHANNEL_POSTS } from './services/sampleChannelPosts.js'
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const dataDirectory = path.join(__dirname, 'data')
 const dataFile = path.join(dataDirectory, 'matrimony.json')
+const uploadsDirectory = path.join(__dirname, 'uploads')
 const app = express()
 const port = Number(process.env.PORT || 8787)
 const allowedOrigin = process.env.APP_ORIGIN || 'http://127.0.0.1:5173'
@@ -19,10 +20,25 @@ const adminIngestToken = process.env.ADMIN_INGEST_TOKEN
 let runtimeStore
 
 app.use(cors({ origin: allowedOrigin }))
-app.use(express.json({ limit: '500kb' }))
+app.use(express.json({ limit: '3mb' }))
+app.use('/uploads', express.static(uploadsDirectory, { fallthrough: false, maxAge: '1d' }))
 
 const cleanText = (value, max = 120) => String(value || '').trim().replace(/[<>]/g, '').slice(0, max)
 const id = (prefix) => `${prefix}_${crypto.randomUUID()}`
+
+async function saveProfilePhoto(dataUrl) {
+  if (!dataUrl) return ''
+  if (isVercel) throw new Error('Image upload storage must be configured before accepting photos in production.')
+  const match = String(dataUrl).match(/^data:image\/(jpeg|png|webp);base64,([A-Za-z0-9+/=]+)$/)
+  if (!match) throw new Error('Please upload a JPG, PNG, or WebP image.')
+  const image = Buffer.from(match[2], 'base64')
+  if (!image.length || image.length > 1_500_000) throw new Error('Please choose an image smaller than 1.5 MB.')
+  const extension = match[1] === 'jpeg' ? 'jpg' : match[1]
+  const fileName = `${id('profile-photo')}.${extension}`
+  await fs.mkdir(uploadsDirectory, { recursive: true })
+  await fs.writeFile(path.join(uploadsDirectory, fileName), image)
+  return `/uploads/${fileName}`
+}
 
 function createProfileRecord(parsed) {
   const phone = String(parsed.phone || '9150444444').replace(/\D/g, '')
@@ -107,6 +123,13 @@ function publicProfile(profile) {
     occupation: profile.occupation || '',
     income: profile.income || '',
     height: profile.height || '',
+    photoUrl: profile.photoUrl || '',
+    familyType: profile.familyType || '',
+    expectedEducation: profile.expectedEducation || '',
+    expectedMinIncome: profile.expectedMinIncome || '',
+    expectedMaxIncome: profile.expectedMaxIncome || '',
+    expectedRasi: profile.expectedRasi || '',
+    expectedNakshatram: profile.expectedNakshatram || '',
     about: profile.about,
     verificationStatus: profile.verificationStatus,
     source: profile.source || 'direct-registration',
@@ -151,6 +174,7 @@ app.get('/api/profiles', async (request, response, next) => {
     const city = cleanText(request.query.city, 70).toLowerCase()
     const kulam = cleanText(request.query.kulam, 60).toLowerCase()
     const profiles = store.profiles
+      .filter((profile) => profile.verificationStatus === 'verified')
       .filter((profile) => !lookingFor || profile.gender === lookingFor)
       .filter((profile) => !city || profile.city.toLowerCase().includes(city))
       .filter((profile) => !kulam || (profile.kulam && profile.kulam.toLowerCase().includes(kulam)))
@@ -281,6 +305,12 @@ app.post('/api/profiles', async (request, response, next) => {
     const education = cleanText(request.body.education, 80)
     const income = cleanText(request.body.income, 40)
     const height = cleanText(request.body.height, 30)
+    const familyType = cleanText(request.body.familyType, 60)
+    const expectedEducation = cleanText(request.body.expectedEducation, 80)
+    const expectedMinIncome = cleanText(request.body.expectedMinIncome, 40)
+    const expectedMaxIncome = cleanText(request.body.expectedMaxIncome, 40)
+    const expectedRasi = cleanText(request.body.expectedRasi, 60)
+    const expectedNakshatram = cleanText(request.body.expectedNakshatram, 60)
     const about = cleanText(request.body.about, 600)
     const phone = String(request.body.phone || '').replace(/\D/g, '')
 
@@ -291,6 +321,7 @@ app.post('/api/profiles', async (request, response, next) => {
     if (!['Bride', 'Groom'].includes(gender) || !['Bride', 'Groom'].includes(lookingFor)) return response.status(400).json({ error: 'Choose a valid profile and preference.' })
     if (phone.length < 10 || phone.length > 15) return response.status(400).json({ error: 'Enter a valid mobile number.' })
 
+    const photoUrl = await saveProfilePhoto(request.body.photoDataUrl)
     const store = await readStore()
     const profile = {
       id: id('profile'),
@@ -305,6 +336,13 @@ app.post('/api/profiles', async (request, response, next) => {
       education,
       income,
       height,
+      photoUrl,
+      familyType,
+      expectedEducation,
+      expectedMinIncome,
+      expectedMaxIncome,
+      expectedRasi,
+      expectedNakshatram,
       occupation,
       about,
       phoneHash: crypto.createHash('sha256').update(phone).digest('hex'),

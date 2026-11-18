@@ -5,6 +5,15 @@
  */
 
 const KONGU_REGION_DISTRICTS = ['Coimbatore', 'Erode', 'Tiruppur', 'Salem', 'Namakkal', 'Karur', 'Dharmapuri', 'Krishnagiri']
+const HIGHER_EDUCATION = /(?:b\.?e|b\.?tech|m\.?e|m\.?tech|mba|m\.?sc|mca|ph\.?d|doctor|ca|degree|graduate)/i
+
+function incomeToLpa(value) {
+  const number = Number(String(value || '').replace(/[^0-9.]/g, ''))
+  if (!number) return 0
+  const text = String(value).toLowerCase()
+  if (text.includes('month') || text.includes('pm')) return number * 12 / 100000
+  return number
+}
 
 export function calculateMatchScore(candidate, target) {
   // 1. Mandatory Gender Check
@@ -90,10 +99,44 @@ export function calculateMatchScore(candidate, target) {
     score += 5
   }
 
+  // 6. Rasi and Nakshatram preferences: informative compatibility signals,
+  // not a substitute for family or astrologer review.
+  const preferredRasi = String(candidate.expectedRasi || '').trim().toLowerCase()
+  const preferredStar = String(candidate.expectedNakshatram || '').trim().toLowerCase()
+  if (preferredRasi && String(target.rasi || '').toLowerCase().includes(preferredRasi)) {
+    score += 8
+    reasons.push('Rasi preference is aligned.')
+  }
+  if (preferredStar && String(target.nakshatram || '').toLowerCase().includes(preferredStar)) {
+    score += 8
+    reasons.push('Nakshatram preference is aligned.')
+  }
+
+  // 7. Education and income expectations.
+  const expectedEducation = String(candidate.expectedEducation || '').trim()
+  if (expectedEducation && String(target.education || '').toLowerCase().includes(expectedEducation.toLowerCase())) {
+    score += 8
+    reasons.push('Education expectation is aligned.')
+  } else if (!expectedEducation && HIGHER_EDUCATION.test(`${candidate.education} ${target.education}`)) {
+    score += 4
+  }
+
+  const minimumIncome = incomeToLpa(candidate.expectedMinIncome)
+  const targetIncome = incomeToLpa(target.income)
+  if (minimumIncome && targetIncome >= minimumIncome) {
+    score += 8
+    reasons.push('Income expectation is aligned.')
+  }
+
+  if (candidate.familyType && target.familyType && candidate.familyType === target.familyType) {
+    score += 4
+    reasons.push('Family preference is aligned.')
+  }
+
   const finalScore = Math.min(100, Math.max(10, score))
-  let badge = 'Good Match ✦'
-  if (finalScore >= 85) badge = 'Excellent Match ✦✦✦'
-  else if (finalScore >= 70) badge = 'High Compatibility ✦✦'
+  let badge = 'Good compatibility'
+  if (finalScore >= 85) badge = 'Strong compatibility'
+  else if (finalScore >= 70) badge = 'High compatibility'
 
   return {
     score: finalScore,
