@@ -392,14 +392,14 @@ app.post('/api/orders', async (request, response, next) => {
   try {
     const plan = cleanText(request.body.plan, 20)
     const profileId = cleanText(request.body.profileId, 100)
-    const prices = { Classic: 1999, Assisted: 3499 }
+    const prices = { Community: 199 }
     if (!prices[plan] || !profileId) return response.status(400).json({ error: 'Select a valid membership plan and profile.' })
     const store = await readStore()
     if (!store.profiles.some((profile) => profile.id === profileId)) return response.status(404).json({ error: 'Profile not found.' })
     const order = { id: id('order'), profileId, plan, amount: prices[plan], currency: 'INR', status: 'created', createdAt: new Date().toISOString() }
     store.orders.push(order)
     await writeStore(store)
-    response.status(201).json({ order, nextStep: 'Create a Razorpay or Cashfree order server-side and verify its signed webhook before activating membership.' })
+    response.status(201).json({ order, nextStep: 'Create a Razorpay or Cashfree order server-side, then verify its signed webhook before activating membership.' })
   } catch (error) { next(error) }
 })
 
